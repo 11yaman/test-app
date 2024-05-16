@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  producer:
+    build:
+      context: ./producer
+    ports:
+      - "5001:5001"
+    networks:
+      - shared_network
+
+  consumer:
+    build:
+      context: ./consumer
+    ports:
+      - "5002:5002"
+    networks:
+      - shared_network
+
+  app:
+    build:
+      context: ./app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - producer
+      - consumer
+    networks:
+      - shared_network
+      
+networks:
+  shared_network:
+    external: true
