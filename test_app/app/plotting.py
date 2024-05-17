@@ -87,7 +87,6 @@ def create_latency_plot(df):
             if not latencies.size:
                 continue
 
-            # color = colors[broker][idx % len(colors[broker])]
             x_values = range(0, len(latencies))
             ax.plot(x_values, latencies, label=f'{broker} {partition}', marker=',', color=colors[broker])
             ax.fill_between(x_values, latencies - std_dev_latencies, latencies + std_dev_latencies, alpha=0.2, facecolor=colors[broker])
@@ -112,8 +111,6 @@ def create_latency_plot(df):
 
     plt.ylim(0, max(overall_max_yvalue * 1.1, overall_max_yvalue + overall_min_yvalue))
     plt.tight_layout()
-
-    # fig.text(0.5, 0.0, 'Number of Messages Sent', ha='center', va='center', fontsize=14)
 
     buf = io.BytesIO()
     plt.savefig(buf, format='png')

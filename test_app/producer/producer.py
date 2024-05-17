@@ -28,22 +28,6 @@ def start():
 
     return jsonify({"message_count": message_count})
 
-@app.route('/warm_up', methods=['POST'])
-def warm_up():
-    data = request.json
-    warm_up_message_count = data['message_count']
-    warm_up_message_size = data['message_size']
-    warm_up_topic = data['topic']
-
-    print(f"Warm-up producing started... {time.time()}")
-
-    produce_messages(warm_up_message_count, warm_up_message_size, warm_up_topic)
-
-    print(f"Warm-up producing finished {time.time()}")
-
-    return jsonify({"status": "Warm-up completed"})
-
-
 @app.route('/produce', methods=['POST'])
 def start_producing():
     global producer

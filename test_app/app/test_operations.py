@@ -69,8 +69,6 @@ def start_test(broker, message_count, message_size, num_partitions):
     start_consumer(test_params)
     start_producer(test_params)
 
-    # warm_up(broker, message_count, message_size, topic_name, num_partitions)
-
     consumer_thread = threading.Thread(target=consume, args=(consumer_results,))
     producer_thread = threading.Thread(target=produce, args=(test_params,))
 
@@ -87,23 +85,3 @@ def start_test(broker, message_count, message_size, num_partitions):
         "throughput": consumer_results[0]['throughput'],
         "latencies": consumer_results[0]['latencies']
     }
-
-def warm_up(broker, message_count, message_size, topic_name, num_partitions):
-
-    warm_up_params = {
-        "broker": broker,
-        "message_count": int(message_count * 0.1),
-        "message_size": message_size,
-        "topic": topic_name
-    }
-
-    consumer_thread = threading.Thread(target=warm_up_consumer, args=(warm_up_params,))
-    producer_thread = threading.Thread(target=warm_up_producer, args=(warm_up_params,))
-
-    consumer_thread.start()
-    time.sleep(5)
-    producer_thread.start()
-    producer_thread.join()
-    consumer_thread.join()
-        
-    print("Warm-up phase completed.")
