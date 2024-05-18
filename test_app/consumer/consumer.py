@@ -23,38 +23,6 @@ def start():
     
     return jsonify({"status": "Consumer started"}), 200
 
-@app.route('/warm_up', methods=['POST'])
-def warm_up():
-    warm_up_data = request.json
-    warm_up_topic = warm_up_data['topic']
-    warm_up_message_count = warm_up_data['message_count']
-
-    consumer.subscribe([warm_up_topic])
-
-    warm_up_messages_received = 0
-
-    try:
-        while warm_up_messages_received < warm_up_message_count:
-            msg = consumer.poll(0)
-            if msg is None:
-                continue
-            if msg.error():
-                if msg.error().code() == KafkaError._PARTITION_EOF:
-                    continue
-                else:
-                    raise KafkaException(msg.error())
-            else:
-                warm_up_messages_received += 1
-                if warm_up_messages_received >= message_count:
-                    break
-
-        print("Warm-up completed.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return jsonify({"error": "An error occurred"}), 500
-
-    return jsonify({"status": "Warm-up completed"})
-
 @app.route('/consume', methods=['GET'])
 def consume():
     global consumer, message_count, message_size, topic
